@@ -1,0 +1,5 @@
+# ignore mac cache
+*.DS_Store
+
+# ignore vscode files
+.vscode/
