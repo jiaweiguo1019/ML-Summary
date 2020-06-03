@@ -76,7 +76,9 @@ k-fold cross validation
 自助采样
 给定包含 $m$ 个样本的数据集 $D$，我们对它进行采样产生数据集 $D^{'}$：每次随机从 $D$ 中挑选**一个**样本，将其**拷贝**放入 $D^{'}$，然后再将该样本**放回**初始数据集 $D$ 中，使得该样本在下次采样时仍有可能被采到；这个过程**重复执行** $m$ 次后，我们就得到了包含 $m$ 个样本的数据集 $D^{'}$。
 显然，$D$ 中有一部分会在 $D^{'}$ 中多次出现，而另一部分样本不出现。
-$\lim_{m \rarr \infin} (1 -  \frac{1}{m})^m = \frac{1}{e}$
+
+$$\lim_{m \rarr \infin} (1 -  \frac{1}{m})^m = \frac{1}{e}$$
+
 即通过自助采样，初始数据集 $D$ 中约有 $36.8\%$ 的样本未出现在采样数据集 $D^{'}$ 中。 于是我们可将 $D^{'}$ 用做云莲集， $D \backslash D^{'}$ 用作测试集；这样，实际评估的模型与期望评估的模型**都使用m个训练样本**，而我们仍有数据总量约 $1/3$ 的、没在训练集中出现的样本用于测试。这样的测试结果，亦称“包外估计”（out-of-bag）。
 
 自助法在**数据集小、难以有效划分训练/测试集**时很有用；此外，自助法**能从初始数据集中产生多个不同的训练集**，这对**集成学习**等方法有很大的好处。然而，自助法产生的数据集**改变了初始数据集的分布**，这会引入偏差。因此，在初始数据集足够时，留出法和交叉验证法更常用一些。
@@ -89,21 +91,22 @@ $\lim_{m \rarr \infin} (1 -  \frac{1}{m})^m = \frac{1}{e}$
 
 #### P-R曲线与F1
 
-$F_{\beta} = \frac{(1 + \beta) \times P \times R}{(\beta^2 \times P) + R}$
+$$F_{\beta} = \frac{(1 + \beta) \times P \times R}{(\beta^2 \times P) + R}$$
 
 其中 $\beta > 0$ 度量了查全率对查准率的相对重要性。$\beta = 1$ 时退化为标准的 $F1$；$\beta > 1$ 时查全率有更大影响；$\beta < 1$ 时查准率有更大影响。
 
 在 $n$ 个二分类混淆矩阵上综合考察查准率和查全率。
 一种直接的做法是先在各混淆矩阵上分别计算出查准率和查全率，再计算**平均值**，这样就得到了“宏查准率”（$macro-P$）、“宏查全率”（$macro-R$），以及相应的“宏$F1$”（$macro-F1$）:
-$macro-P = \frac{1}{n} \sum_{i = 1}^{n} P_i$
-$macro-R = \frac{1}{n} \sum_{i = 1}^{n} R_i$
-$macro-F_1 = \frac{2 \times macro-P \times macro-R}{macro-P + macro-R}$
+
+$$macro-P = \frac{1}{n} \sum_{i = 1}^{n} P_i$$
+$$macro-R = \frac{1}{n} \sum_{i = 1}^{n} R_i$$
+$$macro-F_1 = \frac{2 \times macro-P \times macro-R}{macro-P + macro-R}$$
 
 **还可**先将各混淆矩阵的**对应元素**进行平均，得到 $TP$、$FP$、$TN$、$FN$ 的平均值，分别记为 $\overline{TP}$、$\overline{FP}$、$\overline{TP}$、$\overline{FP}$ 的平均值，再基于这些平均值计算出“**微**查准率”（$micro-P$）、“微查全率”（$micro-R$），以及相应的“微$F1$”（$micro-F1$）:
 
-$micro-P = \frac{\overline{TP}}{\overline{TP} + \overline{FP}}$
-$micro-R = \frac{\overline{TP}}{\overline{TP} + \overline{FN}}$
-$micro-F_1 = \frac{2 \times micro-P \times micro-R}{micro-P + micro-R}$
+$$micro-P = \frac{\overline{TP}}{\overline{TP} + \overline{FP}}$$
+$$micro-R = \frac{\overline{TP}}{\overline{TP} + \overline{FN}}$$
+$$micro-F_1 = \frac{2 \times micro-P \times micro-R}{micro-P + micro-R}$$
 
 #### ROC 与 AUC
 
@@ -118,17 +121,21 @@ ROC（Receiver Operating Characteristic）：受试者工作特征
 
 形式化地看，AUC考虑的是样本排序的排序质量，因此它与排序误差有紧密联系。给定 $m^+$ 个正例和 $m^-$ 个反例，令 $D^+$ 和 $D^-$ 分别表示正、反例集合，则排序“损失”（loss）定义为
 
-$\ell_{rank} = \frac{1}{m^+ m^-} \displaystyle\sum_{\bm{x}^+ \in D^+}\displaystyle\sum_{\bm{x}^- \in D^-} \bigg( \mathbb{I} \big( f(\bm{x}^+) < f(\bm{x}^-) \big) + \frac{1}{2} \mathbb{I} \big( f(\bm{x}^+) = f(\bm{x}^-) \big) \bigg)$
+$$
+    \ell_{rank} = \frac{1}{m^+ m^-} \displaystyle\sum_{\bm{x}^+ \in D^+}\displaystyle\sum_{\bm{x}^- \in D^-} \bigg( \mathbb{I} \big( f(\bm{x}^+) < f(\bm{x}^-) \big) + \frac{1}{2} \mathbb{I} \big( f(\bm{x}^+) = f(\bm{x}^-) \big) \bigg)
+$$
 
 即考虑**每一对**正、反例，若正例的预测值小雨反例，则记一个“发奋”，若相等，则记 $0.5$ 个罚分。容易看出，$\ell_{rank}$ 对应的是ROC曲线**之上**的面积：若一个正例在ROC曲线上对应标记点的坐标为（$x, y$），则 $x$ 恰是排序在其之前的反例所占的比例，即假正例率。因此有
 
-$\text{AUC} = 1 - \ell_{rank}$
+$$\text{AUC} = 1 - \ell_{rank}$$
 
 #### 代价曲线
 
 为权衡不同类型错误所造成的不同损失，可为错误赋予“非均等代价”（unequal cost），则“代价敏感”（cost-sensitive）错误率为
 
-$E(f; D; cost) = \frac{1}{m} \bigg( \displaystyle\sum_{\bm{x}_i \in D^+} \mathbb{I} \big(f(\bm{x}_i) \not = y_i \big) \times cost_{01} + \displaystyle\sum_{\bm{x}_i \in D^-} \mathbb{I} \big(f(\bm{x}_i) \not = y_i \big) \times cost_{10} \bigg)$
+$$
+    E(f; D; cost) = \frac{1}{m} \bigg( \displaystyle\sum_{\bm{x}_i \in D^+} \mathbb{I} \big(f(\bm{x}_i) \not = y_i \big) \times cost_{01} + \displaystyle\sum_{\bm{x}_i \in D^-} \mathbb{I} \big(f(\bm{x}_i) \not = y_i \big) \times cost_{10} \bigg)
+$$
 
 在非均等代价下，ROC曲线不能直接反应出学习器的期望总体代价，而“代价曲线”（cost curve）则可达到该目的。
 
@@ -142,9 +149,55 @@ $E(f; D; cost) = \frac{1}{m} \bigg( \displaystyle\sum_{\bm{x}_i \in D^+} \mathbb
 
 #### 偏差与方差
 
-“偏差-方差分解”（bias-variance decomposition）试图对学习算法的**期望**泛化错误率进行拆解。我们知道，算法在不同训练集上学得的结果很可能不同，即便这些训练集是来自同一个分布。对测试样本 $\bm{x}$，令 $y_D$ 为 $\bm{x}$ 在数据集中的标记，$y$ 为  $\bm{x}$ 的真实标记，$f(\bm{x}; D)$ 为训练集$D$ 上学得模型 $f$ 在 $\bm{x}$ 上的预测输出
+“偏差-方差分解”（bias-variance decomposition）试图对学习算法的**期望**泛化错误率进行拆解。我们知道，算法在不同训练集上学得的结果很可能不同，即便这些训练集是来自同一个分布。对测试样本 $\bm{x}$，令 $y_D$ 为 $\bm{x}$ 在数据集中的标记，$y$ 为  $\bm{x}$ 的真实标记，$f(\bm{x}; D)$ 为训练集$D$ 上学得模型 $f$ 在 $\bm{x}$ 上的预测输出。已回归任务为例，学习算法的期望预测为
+$$
+    \overline{f}(\bm{x}) = \mathbb{E}_D[f(\bm{x}; D)]
+$$
+
+使用**样本数相同**的不同训练集产生的方差为
+$$
+    var(\bm{x}) = \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big]
+$$
+
+噪声为
+$$
+    \epsilon^2 = \mathbb{E}_D \Big[ (y_D - y)^2 \Big]
+$$
+
+期望输出与**真实标记**的差别为偏差（bias），即
+$$
+    bias^2(\bm{x}) = \big( \overline{f}(\bm{x}) - y \big)^2
+$$
+
+为了便于讨论，假定噪声期望为零，即 $\mathbb{E}_D [y_D - y] = 0$。通过简单的多项式展开合并，可对算法的期望泛化误差进行分解：
+$$
+    \begin{aligned}
+        \mathbb{E}(f; D)
+        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - y_D)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) + \overline{f}(\bm{x}) - \overline{f}(\bm{x}) - y_D)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y_D \big)^2 \Big] \\
+         & + \mathbb{E}_D \Big[2 \big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big) \big( \overline{f}(\bm{x}) - y_D \big) \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y_D \big)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) + y - y - y_D \big)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y \big)^2 \Big] + \mathbb{E}_D \Big[ (y_D - y)^2 \Big] \\
+         & + 2 \mathbb{E}_D \Big[ \big( \overline{f}(\bm{x}) - y \big) \big( y - y_D \big) \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y \big)^2 \Big] + \mathbb{E}_D \Big[ (y_D - y)^2 \Big] \\
+    \end{aligned}
+$$
+
+于是，
+$$
+    \mathbb{E}(f; D) = bias^2(\bm{x}) + var(\bm{x}) = \epsilon^2
+$$
+也就是说，泛化误差可分解为偏差、方差与噪声之和。
+
+> 上面所有的期望都是对 $D$ 取的
+
+偏差度量了学习算法的**期望预测**与真实结果的偏离程度，即刻画了学习算法本身的你和能力；方差度量了同样大小的训练集的变动所导致的学习性能的变化，即刻画了数据扰动所造成的影响；噪声则表达了在当前任务上任何学习算法本身的难度。偏差-方差分解表明，泛化能力是由**学习算法的能力**、**数据的充分性**以及**学习任务本身的难度**所共同决定的。给定学习任务，为了取得好的泛化性能，则需偏差较小，即能够充分拟合数据，并且使方差较小，即使得数据扰动产生的影响小。
 
 
+
+## tmp
 
 asdasffds
 fdfgdf
