@@ -7,18 +7,25 @@
 在计算机系统中，“经验”通常以“数据”形式存在，因此，机器学习所研究的主要内容，是关于在计算机上从数据中产生“模型”的算法，即学习算法（learning algorithm）。有了学习算法，我们把**经验**数据提供给`它`，它就能基于这些数据产生模型；在面对新的情况时，模型会给我们提供相应的判断。
 
 数据集
+
 示例、样本
+
 属性、特征
+
 属性值
 
 属性张成的空间称为“属性空间”、“样本空间”或“输入空间”。
+
 由于空间中的每个点对应一个坐标向量，因此我们也把**一个示例**称为一个“**特征向量**”。
 
 从数据学得模型的过程称为“学习”或“训练”，这个过程是通过执行**某个**学习算法来完成。
+
 学得模型对应了关于数据的某种潜在的规律，因此亦称“假设”；这种潜在规律自身，则称为“真相”或“真实”，学习过程就是为了找出或逼近真相。
 
 标记
+
 有了标记信息的示例，则称为“样例”
+
 标记的集合：“样本空间”或“输出空间”
 
 通常**假设**样本空间中全体样本服从一个未知的“分布” $\mathcal{D}$，我们获得的每个样本都是独立地从这个分布上采样获得的，即“独立同分布”
@@ -26,6 +33,7 @@
 ### 假设空间
 
 归纳（induction）：特殊到一般
+
 演绎（deduction）：一般到特殊
 
 狭义的归纳学习：“概念学习”或“概念形成”
@@ -39,6 +47,7 @@
 对于一个具体的学习算法，**必须**要产生一个模型。这时，学习算法本身的“偏好”就会起到关键的作用。
 
 机器学习算法在学习过程中对某种类型假设的偏好，称为“归纳偏好”（inductive bias），或简称为“偏好”。
+
 任何一个有效的机器学习算法必有其归纳偏好，否则它将被假设空间中看似在训练集上“等效”的假设所迷惑，而无法产生确定的学习结果。
 
 奥卡姆剃刀本身存在不同的诠释，使用奥卡姆剃刀原则**并不平凡**。
@@ -50,6 +59,7 @@ NFL的前提：所有“问题”出现的机会相同、或所有问题同等�
 ### 评估方法
 
 训练误差、经验误差：学习器在训练集上的误差
+
 泛化误差：在新样本上的误差
 
 评估方法：以测试集上的“测试误差”作为泛化误差的**近似**
@@ -57,10 +67,12 @@ NFL的前提：所有“问题”出现的机会相同、或所有问题同等�
 #### 留出法
 
 训练/测试集的划分要尽可能保持数据分布的一致性，避免因数据划分过程引入**额外的偏差**而对最终结果产生影响。
+
 如果从采样的角度来看待数据集的划分过程，则**保留类别比例**的采样方式通常称为“分层采样”。
 **单次**使用留出法得到的估计结果往往不够可靠，在使用留出法时，一般要采用**若干次**随机划分、重复进行实验评估后取平均值作为留出法的评估结果。
 
 我们希望评估的是用 $D$ 训练出的模型的性能，但留出法需划分训练/测试集，这就会导致一个窘境：若令训练集 $S$ 包含绝大多数样本，则训练出得模型可能更接近于用 $D$ 训练出的模型，但由于 $T$ 比较小，评估结果可能不够稳定准确；若令测试集 $T$ 多包含一些样本，则训练集 $S$ 与 $D$ 差别更大了，被评估的模型与用 $D$ 训练出的模型相比可能有较大的差别，从而降低了评估结果的保真性（fidelity）。
+
 > 可从“偏差-方差”的角度来理解：测试集小时，评估结果的方差较大；训练集小时，评估结果的偏差较大。
 
 留一法：数据集比较大时，训练m个模型的计算开销可能是难以忍受的，而这还是在未考虑算法挑参的情况下。另外，留一法的估计结果也未必永远比其他评估方法准确；“没有免费的午餐”定理**对实验评估方法同样适用**。
@@ -68,13 +80,17 @@ NFL的前提：所有“问题”出现的机会相同、或所有问题同等�
 #### 交叉验证
 
 k-fold cross validation
+
 交叉验证法评估结果的稳定性和保真性在很大程度上取决于k的取值
+
 > “10次10折交叉验证法”与“100次留出法”都是进行了100次训练/测试。
 
 #### 自助法
 
 自助采样
+
 给定包含 $m$ 个样本的数据集 $D$，我们对它进行采样产生数据集 $D^{'}$：每次随机从 $D$ 中挑选**一个**样本，将其**拷贝**放入 $D^{'}$，然后再将该样本**放回**初始数据集 $D$ 中，使得该样本在下次采样时仍有可能被采到；这个过程**重复执行** $m$ 次后，我们就得到了包含 $m$ 个样本的数据集 $D^{'}$。
+
 显然，$D$ 中有一部分会在 $D^{'}$ 中多次出现，而另一部分样本不出现。
 
 $$\lim_{m \rarr \infin} (1 -  \frac{1}{m})^m = \frac{1}{e}$$
@@ -96,16 +112,21 @@ $$F_{\beta} = \frac{(1 + \beta) \times P \times R}{(\beta^2 \times P) + R}$$
 其中 $\beta > 0$ 度量了查全率对查准率的相对重要性。$\beta = 1$ 时退化为标准的 $F1$；$\beta > 1$ 时查全率有更大影响；$\beta < 1$ 时查准率有更大影响。
 
 在 $n$ 个二分类混淆矩阵上综合考察查准率和查全率。
+
 一种直接的做法是先在各混淆矩阵上分别计算出查准率和查全率，再计算**平均值**，这样就得到了“宏查准率”（$macro-P$）、“宏查全率”（$macro-R$），以及相应的“宏$F1$”（$macro-F1$）:
 
 $$macro-P = \frac{1}{n} \sum_{i = 1}^{n} P_i$$
+
 $$macro-R = \frac{1}{n} \sum_{i = 1}^{n} R_i$$
+
 $$macro-F_1 = \frac{2 \times macro-P \times macro-R}{macro-P + macro-R}$$
 
 **还可**先将各混淆矩阵的**对应元素**进行平均，得到 $TP$、$FP$、$TN$、$FN$ 的平均值，分别记为 $\overline{TP}$、$\overline{FP}$、$\overline{TP}$、$\overline{FP}$ 的平均值，再基于这些平均值计算出“**微**查准率”（$micro-P$）、“微查全率”（$micro-R$），以及相应的“微$F1$”（$micro-F1$）:
 
 $$micro-P = \frac{\overline{TP}}{\overline{TP} + \overline{FP}}$$
+
 $$micro-R = \frac{\overline{TP}}{\overline{TP} + \overline{FN}}$$
+
 $$micro-F_1 = \frac{2 \times micro-P \times micro-R}{micro-P + micro-R}$$
 
 #### ROC 与 AUC
@@ -117,12 +138,13 @@ ROC（Receiver Operating Characteristic）：受试者工作特征
 横轴“假正例率”（False Positive Rate，简称FPR），纵轴“真正例率”（True Positive Rate）
 
 现实任务中通常是利用有限个测试样例来绘制 ROC 图
+
 给定 $m^+$ 个正例和 $m^-$ 个反例，根据学习器预测结果对样例进行排序，然后把分类阈值设为最大，即把所有样例均预测为反例，此时真正例率和假正例率均为0，在坐标（0，0）处标记一个点。然后，将分类阈值依次设为每个样例的预测值，即**依次**将每个样例划分为*正例**。设前一个标记点坐标为（$x, y$），当前若为真正例，则对应标记点的坐标为（$x, y + \frac{1}{m^+}$）；当前若为假正例，则对应标记点的坐标为（$x + \frac{1}{m^-}, y$），然后用线段连接相邻点即得。
 
 形式化地看，AUC考虑的是样本排序的排序质量，因此它与排序误差有紧密联系。给定 $m^+$ 个正例和 $m^-$ 个反例，令 $D^+$ 和 $D^-$ 分别表示正、反例集合，则排序“损失”（loss）定义为
 
 $$
-    \ell_{rank} = \frac{1}{m^+ m^-} \displaystyle\sum_{\bm{x}^+ \in D^+}\displaystyle\sum_{\bm{x}^- \in D^-} \bigg( \mathbb{I} \big( f(\bm{x}^+) < f(\bm{x}^-) \big) + \frac{1}{2} \mathbb{I} \big( f(\bm{x}^+) = f(\bm{x}^-) \big) \bigg)
+    \ell_{rank} = \frac{1}{m^+ m^-} \displaystyle\sum_{\boldsymbol{x}^+ \in D^+}\displaystyle\sum_{\boldsymbol{x}^- \in D^-} \bigg( \mathbb{I} \big( f(\boldsymbol{x}^+) < f(\boldsymbol{x}^-) \big) + \frac{1}{2} \mathbb{I} \big( f(\boldsymbol{x}^+) = f(\boldsymbol{x}^-) \big) \bigg)
 $$
 
 即考虑**每一对**正、反例，若正例的预测值小雨反例，则记一个“发奋”，若相等，则记 $0.5$ 个罚分。容易看出，$\ell_{rank}$ 对应的是ROC曲线**之上**的面积：若一个正例在ROC曲线上对应标记点的坐标为（$x, y$），则 $x$ 恰是排序在其之前的反例所占的比例，即假正例率。因此有
@@ -134,7 +156,7 @@ $$\text{AUC} = 1 - \ell_{rank}$$
 为权衡不同类型错误所造成的不同损失，可为错误赋予“非均等代价”（unequal cost），则“代价敏感”（cost-sensitive）错误率为
 
 $$
-    E(f; D; cost) = \frac{1}{m} \bigg( \displaystyle\sum_{\bm{x}_i \in D^+} \mathbb{I} \big(f(\bm{x}_i) \not = y_i \big) \times cost_{01} + \displaystyle\sum_{\bm{x}_i \in D^-} \mathbb{I} \big(f(\bm{x}_i) \not = y_i \big) \times cost_{10} \bigg)
+    E(f; D; cost) = \frac{1}{m} \bigg( \displaystyle\sum_{\boldsymbol{x}_i \in D^+} \mathbb{I} \big(f(\boldsymbol{x}_i) \not = y_i \big) \times cost_{01} + \displaystyle\sum_{\boldsymbol{x}_i \in D^-} \mathbb{I} \big(f(\boldsymbol{x}_i) \not = y_i \big) \times cost_{10} \bigg)
 $$
 
 在非均等代价下，ROC曲线不能直接反应出学习器的期望总体代价，而“代价曲线”（cost curve）则可达到该目的。
@@ -142,21 +164,75 @@ $$
 ### 比较检验
 
 * 我们希望比较的是**泛化能力**，然而通过实验评估我们获得的是**测试集上的性能**，两者的对比结果可能未必相同
+
 * 测试集上的性能与**测试集本身的选择**有很大关系，且不论使用不同大小的测试集会得到不同的结果，**即便**用相同大小的测试集，若包含的测试样例不同，测试结果也会有不同
+
 * 很多机器学习算法本身包含一定的**随机性**，即便用相同的参数设置在同一个测试集上多次运行，其结果也会有不同。
 
 统计**假设检验**（hypothesis test）为我们进行 学习器性能比较提供了重要依据。基于假设检验结果我们可推断出，**若**在测试集上观察到学习器A比B好，则A的泛化性能是否在**统计意义上**优于B，以及这个结论的把握有多大。
 
-#### 偏差与方差
+统计学的一些基本概念
+>
+> * 所考察的对象的总和称为**总体**。在统计学中它可以归结为随机变量或其他形式的随机量。该随机变量的分布称为**总体分布**。
+> * 鉴于人们不知道总体分布，我们不得不将总体分布看成某一个分布类的一个成员。若没有任何先验的知识，总体分布所属的类是一个很大的类。
+> * 当分布族确定以后，统计问题就变得十分明朗。我们的研究对象总体分布，它是某个分布族中的一员，知识不能确定罢了。一旦确定了分布，我们就获得了所需的信息。
+> * 设用 $F(x, \theta)$ 表示相应的**分布函数**，用 $F_{\theta}$ 表示相应的分布。$X$ 的分布 $F_{\theta}$ 是未知的（相应的 $\theta$ 也是未知的）。为了获取 $X$ 的分布 $F_{\theta}$ 的信息，我们假定 $F_{\theta}$ 属于一个 **分布族**，用记号 $\mathscr{F} = \{ F_{\theta}, \theta \in \Theta \}$ 表示这个分布族。在分布族 $\mathscr{F}$ 的表达式中 $\theta$ 称为**参数**，$\Theta$ 称为**参数空间**。在统计学中，随机变量 $X$ 称为**总体**，它的分布 $\mathrm{F}_{\theta}$ 就称为**总体分布**。这样，$X \sim F_{\theta} \in \mathscr{F} = \{ F_{\theta}, \theta \in \Theta \}$ 形成了这个统计问题的**模型**，称为**总体模型**。总体模型将实际问题抽象化.
+> * 将数据 $\boldsymbol{x} = (x_1, \cdots, x_n)$ 看成总体随机变量的一组独立观察值，即 $\boldsymbol{x} = (x_1, \cdots, x_n)$ 是随机向量 $\mathbf{X} = (X_1, \cdots, X_n)$的观察值，其中 $(X_1, \cdots, X_n) \sim i.i.d.F_\theta$。$(X_1, \cdots, X_n)$ 称为来自总体 $X$ 的一个**简单随机样本**（简称**样本**）。样本 $\mathbf{X} = (X_1, \cdots, X_n)$ 是一个随机向量。$\boldsymbol{x}$ 称为**样本值**，即我们得到的数据。$\mathbf{X}$ 的取值空间 $\mathscr{X}$ 称为**样本空间**。$\mathbf{X}$ 和它相应的分布族$\{ P_\theta, \theta \in \Theta \}$ 一起称为**统计模型**。
+> * 设 $\mathbf{X} \sim P_\theta (\theta \in \Theta)$ 是一个统计模型，则定义在样本空间 $\mathscr{X}$ 上的任何函数  $T(\boldsymbol{x})(\boldsymbol{x} \in \mathscr{X}$ 都称为**统计量**。从数学上，统计量是一个只依赖数据的函数。
 
-“偏差-方差分解”（bias-variance decomposition）试图对学习算法的**期望**泛化错误率进行拆解。我们知道，算法在不同训练集上学得的结果很可能不同，即便这些训练集是来自同一个分布。对测试样本 $\bm{x}$，令 $y_D$ 为 $\bm{x}$ 在数据集中的标记，$y$ 为  $\bm{x}$ 的真实标记，$f(\bm{x}; D)$ 为训练集$D$ 上学得模型 $f$ 在 $\bm{x}$ 上的预测输出。已回归任务为例，学习算法的期望预测为
+参数估计
+> 设总体 $X$ 的分布函数的形式已知，但它的一个或多个参数未知，借助于总体 $X$ 的一个样本来估计总体未知参数的值的问题称为参数的**点估计**问题。
+
+假设检验
+>
+> 在总体的分布函数完全未知，或值知其形式但不知其参数的情况，提出某些关于总体分布函数或关于其参数的假设，然后抽取样本，构造合适的统计量，再根据样本对所提的假设作出是接受还是拒绝的决策，这样的问题称为**假设检验问题**。
+>
+> 数 $\alpha$ 称为**显著性水平**（简称为**水平**）。
+>
+> 原假设、零假设
+>
+> 备择假设
+>
+> 拒绝域
+>
+> 临界点
+>
+> 只对犯第一类错误的概率加以控制，而不考虑犯第二类错误的概率的检验，称为**显著性检验**。
+>
+> 假设检验问题的 $p$ 值（probability value）是由检验统计量的样本观察值得出的原假设**可被拒绝**的**最小**显著性水平。根据 $p$ 值的定义，对于任意指定的显著性水平 $\alpha$，就有
+>
+> &emsp;&emsp; 1. 若 $p$ 值 $\le \alpha$，则在显著性水平 $\alpha$ 下拒绝 $H_0$
+>
+> &emsp;&emsp; 2. 若 $p$ 值 $> \alpha$，则在显著性水平 $\alpha$ 下接受 $H_0$
+>
+> 这种利用 $p$ 值来确定是否拒绝 $H_0$ 的方法，称为$p$ 值法。
+
+#### 交叉验证 $t$ 检验
+
+在现实任务中，更多时候我们需对不同学习器的性能进行比较
+
+对两个学习器 $A$ 和 $B$，若我们使用 $k$ 折交叉验证法得到的测试错误率分别为 $epsilon^A_1, \cdots, epsilon^A_k$ 和 $epsilon^B_1, \cdots, epsilon^B_k$， 其中 $epsilon^A_i$ 和 $epsilon^B_i$ 是在**相同的**第 $i$ 折训练/测试集上得到的结果，则可用 $k$ 折交叉验证“成对 $t$ 检验”（paired t-tests）来进行比较训练。
+> 有时为了比较两种产品、两种仪器、两种方法等的差异，我们常在**相同的条件下**做**对比实验**，得到一批成对的观察值。然后分析观察数据作出推断。这种方法常称为**逐对比较法**。
+>
+> 一般，设有 $n$ 对相互独立的观察结果 $(X_1, Y_1), \cdots, (X_n, Y_n)$ ，令 $D_i = X_i - Y_i$，则 $D_1, \cdots, D_n$ 相互独立。又由于 $D_1, \cdots, D_n$ 是由同一元素所引起的，可认为它们服从同一分布。 今假设 $D_i \sim N(\mu_D, \sigma^2_D), i = 1, \cdots, n$。这就是说 $D_1, \cdots, D_n$ 构成正态总体 $N(\mu_D, \sigma^2_D)$ 的一个样本，其中 $\mu_D, \sigma^2_D$ 未知。
+
+欲进行有效的假设检验，一个**重要的前提**是测试错误率**均为**泛化错误率的**独立采样**。然而，通常情况下由于样本有限，在使用交叉验证等实验估计方法是，**不同轮次**的训练集会有一定程度的**重叠**。这就使得测试错误率实际上并不独立，会导师**过高估计**假设成立的概率。为了缓解这一问题，可采用“$5 \times 2$ 交叉验证”法。
+$5 \times 2$ 交叉验证是做 $5$ 次 $2$ 折交叉验证，在每次 $2$ 折交叉验证之前随机将数据打乱，使得 $5$ 次交叉验证中的数据划分不重复。对两个学习器 $A$ 和 $B$，第 $i$ 次 $2$ 折交叉验证将产生**两对**测试错误率，我们对它们**分别**求差，得到第 $1$ 折上的差值 $\Delta^1_i$ 和 第 $2$ 折上的差值 $\Delta^2_i$。为缓解测试错误率的非独立性，我们仅计算第 $1$ 次 $2$ 折交叉验证的两个结果的平均值 $\mu = 0.5 (\Delta^1_1 + \Delta^2_1)$，但对每次 $2$ 折实验的结果都计算出其方差 $\sigma^2_i = (\Delta^1_i - \frac{\Delta^1_i + \Delta^2_i}{2})^2 + (\Delta^2_i - \frac{\Delta^1_i + \Delta^2_i}{2})^2$。变量
 $$
-    \overline{f}(\bm{x}) = \mathbb{E}_D[f(\bm{x}; D)]
+    \tau_t = \frac{\mu}{\sqrt{0.2 \displaystyle \sum^5_{i = i} \sigma^2_i}}
+$$
+服从自由度为 $5$ 的 $t$ 分布。
+
+### 偏差与方差
+
+“偏差-方差分解”（bias-variance decomposition）试图对学习算法的**期望**泛化错误率进行拆解。我们知道，算法在不同训练集上学得的结果很可能不同，即便这些训练集是来自同一个分布。对测试样本 $\boldsymbol{x}$，令 $y_D$ 为 $\boldsymbol{x}$ 在数据集中的标记，$y$ 为  $\boldsymbol{x}$ 的真实标记，$f(\boldsymbol{x}; D)$ 为训练集$D$ 上学得模型 $f$ 在 $\boldsymbol{x}$ 上的预测输出。已回归任务为例，学习算法的期望预测为
+$$
+    \overline{f}(\boldsymbol{x}) = \mathbb{E}_D[f(\boldsymbol{x}; D)]
 $$
 
 使用**样本数相同**的不同训练集产生的方差为
 $$
-    var(\bm{x}) = \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big]
+    var(\boldsymbol{x}) = \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) - \overline{f}(\boldsymbol{x}) \big)^2 \Big]
 $$
 
 噪声为
@@ -166,43 +242,54 @@ $$
 
 期望输出与**真实标记**的差别为偏差（bias），即
 $$
-    bias^2(\bm{x}) = \big( \overline{f}(\bm{x}) - y \big)^2
+    bias^2(\boldsymbol{x}) = \big( \overline{f}(\boldsymbol{x}) - y \big)^2
 $$
 
 为了便于讨论，假定噪声期望为零，即 $\mathbb{E}_D [y_D - y] = 0$。通过简单的多项式展开合并，可对算法的期望泛化误差进行分解：
 $$
     \begin{aligned}
         \mathbb{E}(f; D)
-        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - y_D)^2 \Big] \\
-        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) + \overline{f}(\bm{x}) - \overline{f}(\bm{x}) - y_D)^2 \Big] \\
-        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y_D \big)^2 \Big] \\
-         & + \mathbb{E}_D \Big[2 \big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big) \big( \overline{f}(\bm{x}) - y_D \big) \Big] \\
-        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y_D \big)^2 \Big] \\
-        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) + y - y - y_D \big)^2 \Big] \\
-        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y \big)^2 \Big] + \mathbb{E}_D \Big[ (y_D - y)^2 \Big] \\
-         & + 2 \mathbb{E}_D \Big[ \big( \overline{f}(\bm{x}) - y \big) \big( y - y_D \big) \Big] \\
-        =& \mathbb{E}_D \Big[\big( f(\bm{x}; D) - \overline{f}(\bm{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\bm{x}) - y \big)^2 \Big] + \mathbb{E}_D \Big[ (y_D - y)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) - y_D)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) + \overline{f}(\boldsymbol{x}) - \overline{f}(\boldsymbol{x}) - y_D)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) - \overline{f}(\boldsymbol{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\boldsymbol{x}) - y_D \big)^2 \Big] \\
+         & + \mathbb{E}_D \Big[2 \big( f(\boldsymbol{x}; D) - \overline{f}(\boldsymbol{x}) \big) \big( \overline{f}(\boldsymbol{x}) - y_D \big) \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) - \overline{f}(\boldsymbol{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\boldsymbol{x}) - y_D \big)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) - \overline{f}(\boldsymbol{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\boldsymbol{x}) + y - y - y_D \big)^2 \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) - \overline{f}(\boldsymbol{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\boldsymbol{x}) - y \big)^2 \Big] + \mathbb{E}_D \Big[ (y_D - y)^2 \Big] \\
+         & + 2 \mathbb{E}_D \Big[ \big( \overline{f}(\boldsymbol{x}) - y \big) \big( y - y_D \big) \Big] \\
+        =& \mathbb{E}_D \Big[\big( f(\boldsymbol{x}; D) - \overline{f}(\boldsymbol{x}) \big)^2 \Big] + \mathbb{E}_D \Big[ \big(\overline{f}(\boldsymbol{x}) - y \big)^2 \Big] + \mathbb{E}_D \Big[ (y_D - y)^2 \Big] \\
     \end{aligned}
 $$
 
 于是，
 $$
-    \mathbb{E}(f; D) = bias^2(\bm{x}) + var(\bm{x}) = \epsilon^2
+    \mathbb{E}(f; D) = bias^2(\boldsymbol{x}) + var(\boldsymbol{x}) = \epsilon^2
 $$
+
 也就是说，泛化误差可分解为偏差、方差与噪声之和。
 
 > 上面所有的期望都是对 $D$ 取的
 
 偏差度量了学习算法的**期望预测**与真实结果的偏离程度，即刻画了学习算法本身的你和能力；方差度量了同样大小的训练集的变动所导致的学习性能的变化，即刻画了数据扰动所造成的影响；噪声则表达了在当前任务上任何学习算法本身的难度。偏差-方差分解表明，泛化能力是由**学习算法的能力**、**数据的充分性**以及**学习任务本身的难度**所共同决定的。给定学习任务，为了取得好的泛化性能，则需偏差较小，即能够充分拟合数据，并且使方差较小，即使得数据扰动产生的影响小。
 
+## 待整理
 
+### 代价曲线进阶
 
-## tmp
+[link1](https://www.zhihu.com/question/63492375)
 
-asdasffds
-fdfgdf
+### Mcnemar检验
 
+[link1](https://www.jianshu.com/p/0991a8c7d6e2)
 
-gfgd
-dfgd
+[link2](https://www.zhihu.com/question/47835037)
 
+### Friedman 检验 与 Nemenyi 后续检验
+
+[link1](https://blog.csdn.net/qqMiSa/article/details/98660515)
+
+<br/>
+
+$$
+  \boldsymbol{copyright@Jiawei}
+$$
