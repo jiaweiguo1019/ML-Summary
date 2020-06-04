@@ -401,16 +401,16 @@ so $p(x, y)$ = $p(x)p(y)$.
 
   If we use a distribution that is different from the true one, then we must necessarily have a less efficient coding, and on **average** the **additional** information that must be transmitted is (at least) equal to the *Kullback-Leibler divergence* between the two distributions.
 
-* Suppose we're trying to  approximate $p(\mathbf{x})$ using some parametric distribution $q(\mathbf{x} | \bm{\theta})$, governed by a set of **adjustable** parameters $\bm{\theta}$.
+* Suppose we're trying to  approximate $p(\mathbf{x})$ using some parametric distribution $q(\mathbf{x} | \boldsymbol{\theta})$, governed by a set of **adjustable** parameters $\boldsymbol{\theta}$.
 
   We cannot do this directly because we don’t know $p(\mathbf{x})$.
 
   $$\begin{aligned}
     & \mathbb{E}[f] \simeq \frac{1}{N} \sum_{n=1}^{N} f(x_{n})  \\
-    \implies & KL(p || q) \simeq \frac{1}{N} \sum_{n=1}^{N} \{ -ln q(\mathbf{x} | \bm{\theta}) + \ln p(\mathbf{x}) \}
+    \implies & KL(p || q) \simeq \frac{1}{N} \sum_{n=1}^{N} \{ -ln q(\mathbf{x} | \boldsymbol{\theta}) + \ln p(\mathbf{x}) \}
   \end{aligned}$$
 
-  The second term on the right-hand side is independent of $\bm{\theta}$, and the first term is the **negative log likelihood** function for $\bm{\theta}$ under the distribution $q(\mathbf{x} | \bm{\theta})$ evaluated using the training set.
+  The second term on the right-hand side is independent of $\boldsymbol{\theta}$, and the first term is the **negative log likelihood** function for $\boldsymbol{\theta}$ under the distribution $q(\mathbf{x} | \boldsymbol{\theta})$ evaluated using the training set.
 
 * *mutual information*
 
@@ -435,5 +435,5 @@ so $p(x, y)$ = $p(x)p(y)$.
 <br></br>
 
 $$
-  \bm{copyright@Jiawei}
+  \boldsymbol{copyright@Jiawei}
 $$
