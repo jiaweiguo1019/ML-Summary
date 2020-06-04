@@ -16,9 +16,7 @@
 
 * the coefficient $\lambda$ governs the **relative importance** of the regularization term compared with the sum-of-squares error term
 
-* often the coefficient $w_{0}$ is ommited from the regularizer because **its inclusion causes the results to depend on the choice of origin for the target variableor**
-
-  it may be included but with its own regularization coefficient
+* often the coefficient $w_{0}$ is ommited from the regularizer because **its inclusion causes the results to depend on the choice of origin for the target variable**, or it may be included but with its own regularization coefficient
 
 #### Jacobian factor
 
